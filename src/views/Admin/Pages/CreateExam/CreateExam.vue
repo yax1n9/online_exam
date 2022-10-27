@@ -28,7 +28,7 @@ import ExamSetting from '@/components/CreateExam/ExamSetting'
 import CreateDone from '@/components/CreateExam/CreateDone'
 
 export default {
-  name: 'InsertExam',
+  name: 'CreateExam',
   data () {
     return {
       curStep: 0

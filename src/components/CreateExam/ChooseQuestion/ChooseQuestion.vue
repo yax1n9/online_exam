@@ -1,13 +1,15 @@
 <template>
   <div class="choose-question">
     <header>
-      <div class="title">为试卷《demo》选择试题</div>
+      <p class="title">为试卷《demo》选择试题</p>
+      <el-button type="primary" @click="dialogVisible=!dialogVisible" v-show="hasCheckedQuestionList[0]">继续添加
+      </el-button>
     </header>
     <div class="content">
-      <el-empty description="暂无试题" style="height: 100%;" v-if="!questionList[0]">
+      <el-empty description="暂无试题" style="height: 100%;" v-show="!hasCheckedQuestionList[0]">
         <el-button type="primary" @click="dialogVisible=!dialogVisible">添加试题</el-button>
       </el-empty>
-      <div class="question-list" v-if="questionList[0]">
+      <div class="question-list" v-if="hasCheckedQuestionList[0]">
         试题列表
       </div>
     </div>
@@ -27,6 +29,7 @@
 <script>
 import Choose from '@/components/CreateExam/ChooseQuestion/Choose'
 import Insert from '@/components/CreateExam/ChooseQuestion/Insert'
+import { mapState } from 'vuex'
 
 export default {
   name: 'ChooseQuestion',
@@ -36,10 +39,30 @@ export default {
   },
   data () {
     return {
-      questionList: [],
-      dialogVisible: true,
+      questionList: [], // 选中的试题
+      dialogVisible: false,
       tabName: 'choose'
     }
+  },
+  computed: {
+    ...mapState('createExam', ['hasCheckedQuestionList'])
+  },
+  watch: {
+    hasCheckedQuestionList () {
+      this.initQuestionList()
+    }
+  },
+  methods: {
+    initQuestionList () {
+      this.questionList = JSON.parse(JSON.stringify(this.hasCheckedQuestionList))
+    },
+    switchDiaVisible (val) {
+      this.dialogVisible = val
+    }
+  },
+  created () {
+    this.initQuestionList()
+    this.$bus.$on('switchDialogVisible', this.switchDiaVisible)
   }
 }
 </script>
@@ -52,6 +75,13 @@ export default {
   border-radius: 10px;
   padding: 20px;
 
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+  }
+
   .content {
     height: 100%;
     margin: 10px 0;
@@ -60,6 +90,23 @@ export default {
   /deep/ .el-dialog {
     margin-top: 60px !important;
     height: 85% !important;
+
+    .el-dialog__body {
+      height: 95%;
+      padding: 20px;
+
+      .el-tabs {
+        height: 95%;
+
+        .el-tabs__content {
+          height: 100%;
+
+          .el-tab-pane {
+            height: 100%;
+          }
+        }
+      }
+    }
   }
 }
 </style>

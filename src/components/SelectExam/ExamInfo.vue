@@ -1,5 +1,5 @@
 <template>
-  <div class="exam-info">
+  <div class="exam-info" :class="{active:examInfo.isCheck===true}">
     <el-row :gutter="10">
       <el-col :span="1">
         <div class="check-box">
@@ -80,6 +80,10 @@ export default {
 </script>
 
 <style scoped lang="less">
+.active {
+  border: 1px solid deepskyblue !important;
+}
+
 .exam-info {
   width: 100%;
   height: 140px;

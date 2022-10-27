@@ -54,7 +54,11 @@ export default {
     // 处理列表数据，为每一条数据设置响应式多选框状态
     handleTableList (val) {
       this.tableList.forEach(item => {
-        this.$set(item, 'isCheck', val)
+        if (item.isCheck === undefined) {
+          this.$set(item, 'isCheck', val)
+        } else {
+          item.isCheck = val
+        }
       })
     },
     // 全选时触发
@@ -64,17 +68,16 @@ export default {
       } else {
         this.handleTableList(false)
       }
-    }
-  },
-  created () {
-    this.handleTableList(false)
-    // ExamInfo中触发的事件，切换当前页面全选按钮的状态
-    this.$bus.$on('switchIsCheck', (examInfo) => {
+    },
+    // 自定义事件
+    switchIsCheck (examInfo) {
+      // 先更新全选状态
       if (examInfo.isCheck) {
         this.isFullCheck = !this.tableList.some(item => !item.isCheck)
       } else {
         this.isFullCheck = false
       }
+      // 找到对应考试信息并修改状态
       this.tableList.some(item => {
         if (item.examId === examInfo.examId) {
           item.isCheck = examInfo.isCheck
@@ -83,7 +86,12 @@ export default {
           return false
         }
       })
-    })
+    }
+  },
+  created () {
+    this.handleTableList(false)
+    // ExamInfo中触发的事件，切换当前页面全选按钮的状态
+    this.$bus.$on('switchIsCheck', this.switchIsCheck)
   }
 }
 </script>
