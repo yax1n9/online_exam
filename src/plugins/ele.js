@@ -3,7 +3,7 @@ import {
   Menu, Submenu, MenuItemGroup, MenuItem, Avatar, Breadcrumb, BreadcrumbItem,
   Dropdown, DropdownMenu, DropdownItem, Empty, Table, TableColumn, Pagination,
   Link, Select, Option, Autocomplete, Form, FormItem, Dialog, DatePicker, TimePicker, Card, Checkbox, Tag,
-  Steps, Step, Upload, Tabs, TabPane
+  Steps, Step, Upload, Tabs, TabPane, MessageBox
 } from 'element-ui'
 import Scrollbar from 'element-ui/lib/scrollbar'
 
@@ -17,4 +17,5 @@ export default function useEle (Vue) {
     Vue.use(item)
   })
   Vue.prototype.$message = Message
+  Vue.prototype.$confirm = MessageBox.confirm
 }

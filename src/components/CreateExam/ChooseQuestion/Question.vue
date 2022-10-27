@@ -19,8 +19,8 @@
       </div>
     </div>
     <div class="operate right" v-if="operateVisible">
-      <el-link icon="el-icon-edit">编辑</el-link>
-      <el-link icon="el-icon-delete">删除</el-link>
+      <el-link icon="el-icon-edit" @click="editQuestion">编辑</el-link>
+      <el-link icon="el-icon-delete" @click="deleteQuestion">删除</el-link>
     </div>
   </div>
 </template>
@@ -62,6 +62,25 @@ export default {
         this.questionInfo.isChecked = !this.questionInfo.isChecked
         this.handleCheck()
       }
+    },
+    deleteQuestion () {
+      this.$confirm('是否删除试题xxx', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 触发删除事件
+        this.$bus.$emit('deleteQuestion', this.questionInfo)
+        this.$message.success('删除成功')
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
+    },
+    editQuestion () {
+      // 执行修改操作
+      // 1. 弹出修改操作对话框
+      // 2. 可以修改题目，答案，正确答案，分值。。。
+      // 3. 修改数据库中的数据(异常捕获)， 修改仓库数据，修改questionList copyQuestionList copyHasCheckedQuestionList
     }
   }
 }

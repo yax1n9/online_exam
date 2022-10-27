@@ -147,6 +147,7 @@ export default {
       })
     },
     /**
+     * 自定义事件
      * 点击单独项时更新其复选框状态，多选框状态，计数
      * @param question
      */
@@ -182,11 +183,42 @@ export default {
       this.$bus.$emit('switchDialogVisible', false)
       this.copyHasCheckedQuestionList = JSON.parse(JSON.stringify(this.hasCheckedQuestionList))
       this.copyQuestionList = JSON.parse(JSON.stringify(this.questionList))
+    },
+    /**
+     * 自定义事件
+     * 删除单个项时触发
+     */
+    deleteAQuestion (question) {
+      // 1. 删除仓库中的该条信息
+      this.DELETE_A_QUESTION(question)
+      // 2. 删除 copyHasCheckedQuestionList 中的该条信息
+      this.copyHasCheckedQuestionList = JSON.parse(JSON.stringify(this.hasCheckedQuestionList))
+      // 3. 更新 questionList
+      this.questionList.some(item => {
+        if (item.questionId === question.questionId) {
+          item.isChecked = false
+          return true
+        } else {
+          return false
+        }
+      })
+      // 4. 更新 copyQuestionList
+      this.copyQuestionList.some(item => {
+        if (item.questionId === question.questionId) {
+          item.isChecked = false
+          return true
+        } else {
+          return false
+        }
+      })
+      // 5. 更新 copyFullCheck
+      this.fullCheck = this.curPageHasCheckedCount === this.questionList.length
     }
   },
   created () {
     this.initPage()
     this.$bus.$on('switchIsCheck', this.switchIsChecked)
+    this.$bus.$on('deleteQuestion', this.deleteAQuestion)
   }
 }
 </script>

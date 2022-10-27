@@ -10,7 +10,12 @@
         <el-button type="primary" @click="dialogVisible=!dialogVisible">添加试题</el-button>
       </el-empty>
       <div class="question-list" v-if="hasCheckedQuestionList[0]">
-        试题列表
+        <question
+            v-for="item in hasCheckedQuestionList"
+            :key="item.questionId"
+            :question="item"
+            :operate-visible="true">
+        </question>
       </div>
     </div>
     <el-dialog :visible.sync="dialogVisible" width="80%">
@@ -29,13 +34,15 @@
 <script>
 import Choose from '@/components/CreateExam/ChooseQuestion/Choose'
 import Insert from '@/components/CreateExam/ChooseQuestion/Insert'
+import Question from '@/components/CreateExam/ChooseQuestion/Question'
 import { mapState } from 'vuex'
 
 export default {
   name: 'ChooseQuestion',
   components: {
     Choose,
-    Insert
+    Insert,
+    Question
   },
   data () {
     return {
@@ -83,8 +90,15 @@ export default {
   }
 
   .content {
-    height: 100%;
+    height: 92%;
     margin: 10px 0;
+    border: 1px solid #cccccc;
+    overflow-y: auto;
+
+    .question-list {
+      //height: 100%;
+      padding: 0 10px 10px 10px;
+    }
   }
 
   /deep/ .el-dialog {
