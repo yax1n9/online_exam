@@ -33,8 +33,8 @@
           <span>题库管理</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="3-1">题库列表</el-menu-item>
-          <el-menu-item index="3-2">添加题目</el-menu-item>
+          <el-menu-item index="/admin/questionselect">题目查询</el-menu-item>
+          <el-menu-item index="/admin/questioncreate">添加题目</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-submenu index="4">
@@ -43,8 +43,8 @@
           <span>成绩统计</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="4-1">考生成绩</el-menu-item>
-          <el-menu-item index="4-2">成绩分段</el-menu-item>
+          <el-menu-item index="/admin/gradeselect">考生成绩</el-menu-item>
+          <el-menu-item index="/admin/gradestatistic">成绩分段</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-submenu index="5">
@@ -53,8 +53,8 @@
           <span>考生管理</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="3-1">考生查询</el-menu-item>
-          <el-menu-item index="3-2">添加考生</el-menu-item>
+          <el-menu-item index="/admin/studentselect">考生查询</el-menu-item>
+          <el-menu-item index="/admin/studentcreate">添加考生</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
     </el-menu>

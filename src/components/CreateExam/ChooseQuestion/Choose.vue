@@ -3,10 +3,10 @@
     <div class="top">
       <div class="top-left">
         <el-checkbox v-model="fullCheck" label="全选" @change="allCheck"></el-checkbox>
-        <el-select value="" placeholder="试题分类">
+        <el-select v-model="subject" placeholder="试题分类">
           <el-option value="1" label="计算机网络"></el-option>
         </el-select>
-        <el-select value="" placeholder="选择题型">
+        <el-select v-model="type" placeholder="选择题型">
           <el-option value="1" label="选择题"></el-option>
           <el-option value="2" label="填空题"></el-option>
         </el-select>
@@ -19,7 +19,8 @@
       <question
           v-for="item in questionList"
           :key="item.questionId"
-          :question="item"/>
+          :question="item"
+          :operate-visible="false"/>
     </div>
     <div class="bottom">
       <div class="bottom-left">
@@ -41,7 +42,7 @@
 </template>
 
 <script>
-import Question from '@/components/CreateExam/ChooseQuestion/Question'
+import Question from '@/components/QuestionInfo/Question'
 import { mapMutations, mapState } from 'vuex'
 
 export default {
@@ -49,6 +50,13 @@ export default {
   name: 'Choose',
   components: {
     Question
+  },
+  props: {
+    // ChooseQuestion 中请求的分类列表
+    subjectList: {
+      require: true,
+      type: Array
+    }
   },
   data () {
     return {
@@ -58,7 +66,11 @@ export default {
       fullCheck: false,
       copyHasCheckedQuestionList: [],
       copyQuestionList: [],
-      copyFullCheck: false
+      copyFullCheck: false,
+      // 科目分类
+      subject: undefined,
+      // 题型
+      type: undefined
     }
   },
   computed: {

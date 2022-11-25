@@ -54,11 +54,11 @@ export default {
       })
       if (res.data.code === 200) {
         localStorage.setItem('token', res.data.data)
-        localStorage.setItem('role', '1')
+        localStorage.setItem('role', '0')
         this.$message.success(res.data.msg)
         // 返回的数据中的 token 解析并存在 localstorage 中，用于自动登录进入首页
         // 解析后的数据中应该包含 role 字段，根据该字段跳转对应的路由
-        await this.$router.push({ name: 'home' }) // 跳转到管理员界面的默认路由
+        await this.$router.push({ name: 'home' }) // 跳转到首页
       } else {
         this.$message.error(res.data.msg)
       }

@@ -2,7 +2,8 @@
   <div class="choose-question">
     <header>
       <p class="title">为试卷《demo》选择试题</p>
-      <el-button type="primary" @click="dialogVisible=!dialogVisible" v-show="hasCheckedQuestionList[0]">继续添加
+      <el-button type="primary" @click="dialogVisible=!dialogVisible" v-show="hasCheckedQuestionList[0]">
+        继续添加
       </el-button>
     </header>
     <div class="content">
@@ -14,17 +15,18 @@
             v-for="item in hasCheckedQuestionList"
             :key="item.questionId"
             :question="item"
-            :operate-visible="true">
+            :operate-visible="true"
+            :scene="0">
         </question>
       </div>
     </div>
     <el-dialog :visible.sync="dialogVisible" width="80%">
       <el-tabs v-model="tabName">
         <el-tab-pane label="选择试题" name="choose">
-          <choose/>
+          <choose :subject-list="subjectList"/>
         </el-tab-pane>
         <el-tab-pane label="新增试题" name="insert">
-          <insert/>
+          <insert :subject-list="subjectList"/>
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
@@ -34,7 +36,7 @@
 <script>
 import Choose from '@/components/CreateExam/ChooseQuestion/Choose'
 import Insert from '@/components/CreateExam/ChooseQuestion/Insert'
-import Question from '@/components/CreateExam/ChooseQuestion/Question'
+import Question from '@/components/QuestionInfo/Question'
 import { mapState } from 'vuex'
 
 export default {
@@ -48,7 +50,8 @@ export default {
     return {
       questionList: [], // 选中的试题
       dialogVisible: false,
-      tabName: 'choose'
+      tabName: 'choose',
+      subjectList: [] // 科目分类列表
     }
   },
   computed: {
@@ -60,6 +63,10 @@ export default {
     }
   },
   methods: {
+    getSubjectList () {
+      // 设置请求参数请求分类列表
+      // 请求列表数据时可以设置分类参数，按类别查询
+    },
     initQuestionList () {
       this.questionList = JSON.parse(JSON.stringify(this.hasCheckedQuestionList))
     },
@@ -69,6 +76,7 @@ export default {
   },
   created () {
     this.initQuestionList()
+    this.getSubjectList()
     this.$bus.$on('switchDialogVisible', this.switchDiaVisible)
   }
 }

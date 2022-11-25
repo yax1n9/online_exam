@@ -26,16 +26,16 @@
       <el-pagination
           background
           layout="prev, pager, next"
-          :page-size="5"
-          :page-count="1"
-          :total="10">
+          :page-size="pageSize"
+          :page-count="pageCount"
+          :total="total">
       </el-pagination>
     </footer>
   </div>
 </template>
 
 <script>
-import ExamInfo from '@/components/SelectExam/ExamInfo'
+import ExamInfo from '@/components/ExamInfo/ExamInfo'
 
 export default {
   name: 'SelectExam',
@@ -46,7 +46,10 @@ export default {
     return {
       tableList: [{ examId: 1 }, { examId: 2 }, { examId: 3 }, { examId: 4 }, { examId: 5 }, { examId: 6 }],
       keyword: '',
-      isFullCheck: false
+      isFullCheck: false,
+      pageSize: 5,
+      pageCount: 1,
+      total: 6
     }
   },
   computed: {},
@@ -146,9 +149,9 @@ export default {
 
   footer {
     text-align: right;
+    margin-top: 10px;
 
     /deep/ .el-pagination {
-      margin-top: 10px;
 
       .el-pager {
         li {

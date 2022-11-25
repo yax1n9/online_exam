@@ -5,7 +5,7 @@
         <el-step title="基本信息"></el-step>
         <el-step title="选择试题"></el-step>
         <el-step title="试卷设置"></el-step>
-        <el-step title="确认完成"></el-step>
+        <el-step title="完成"></el-step>
       </el-steps>
     </header>
     <div class="content">
@@ -15,8 +15,8 @@
       <create-done v-show="curStep===3"/>
     </div>
     <footer>
-      <el-button @click="prev" v-show="curStep>0&&curStep<4" class="prev-btn">上一步</el-button>
-      <el-button type="primary" @click="next" class="next-btn">下一步</el-button>
+      <el-button @click="prev" v-show="curStep>0&&curStep<3" class="prev-btn">上一步</el-button>
+      <el-button type="primary" @click="next" class="next-btn" v-show="curStep<3">下一步</el-button>
     </footer>
   </div>
 </template>

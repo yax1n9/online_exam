@@ -6,6 +6,8 @@ import store from './store'
 import useEle from '@/plugins/ele'
 // mock
 import '@/mock/mockServer'
+// echarts
+import echarts from '@/plugins/echarts'
 
 useEle(Vue)
 
@@ -16,6 +18,7 @@ new Vue({
   store,
   beforeCreate () {
     Vue.prototype.$bus = this
+    Vue.prototype.$echarts = echarts
   },
   render: h => h(App)
 }).$mount('#app')

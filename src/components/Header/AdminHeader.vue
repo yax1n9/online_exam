@@ -9,7 +9,7 @@
         ></el-avatar>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>个人中心</el-dropdown-item>
-          <el-dropdown-item divided>退出登录</el-dropdown-item>
+          <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -25,7 +25,12 @@ import { mapMutations } from 'vuex'
 export default {
   name: 'AdminHeader',
   methods: {
-    ...mapMutations('asideMenu', ['COLLAPSE'])
+    ...mapMutations('asideMenu', ['COLLAPSE']),
+    logout () {
+      // 清理localstorage
+      // 返回登录页
+      this.$router.push({ name: 'login' })
+    }
   }
 }
 </script>

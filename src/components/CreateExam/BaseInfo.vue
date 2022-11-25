@@ -2,9 +2,11 @@
   <div class="base-info">
     <div class="content">
       <div class="title">试卷标题</div>
-      <el-input placeholder="请输入试卷标题"></el-input>
+      <el-input placeholder="请输入试卷标题" v-model="examName"></el-input>
       <div class="title">试卷分类</div>
-      <el-select value="" placeholder="请选择试卷分类"></el-select>
+      <el-select v-model="examObject">
+        <el-option :value="0" label="计算机网络"></el-option>
+      </el-select>
       <div class="title">试卷封面</div>
       <el-upload
           class="cover-uploader"
@@ -24,6 +26,8 @@ export default {
   name: 'BaseInfo',
   data () {
     return {
+      examName: '',
+      examObject: undefined,
       imageUrl: ''
     }
   },
