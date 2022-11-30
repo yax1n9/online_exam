@@ -35,6 +35,8 @@ export default {
 
 <style scoped lang="less">
 .exam-item {
+  display: inline-block;
+  margin-right: 8px;
   width: 350px;
   height: 180px;
   cursor: pointer;

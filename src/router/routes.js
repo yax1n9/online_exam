@@ -118,7 +118,17 @@ export default [
         path: 'mygrades',
         name: 'my_grades',
         component: () => import('../views/User/Pages/MyGrades/MyGrades')
+      },
+      {
+        path: 'examstart',
+        name: 'exam_start',
+        component: () => import('../views/User/Pages/ExamStart/ExamStart')
       }
     ]
+  },
+  {
+    path: '/exam/answer',
+    name: 'answer',
+    component: () => import('../views/User/Pages/Answer/Answer')
   }
 ]
