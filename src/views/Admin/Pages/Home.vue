@@ -18,6 +18,10 @@ export default {
     QuickBox,
     Examing,
     CardRow
+  },
+  mounted () {
+    // 获取首页信息
+    this.$store.dispatch('adminHome/initHomeData')
   }
 }
 </script>

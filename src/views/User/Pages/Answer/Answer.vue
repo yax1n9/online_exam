@@ -66,7 +66,13 @@
               </div>
             </div>
           </el-main>
-          <el-footer height="80px">Footer</el-footer>
+          <el-footer height="80px">
+            <div class="answer-footer">
+              <el-link type="primary" :underline="false" @click="prevQuestion">上一题</el-link>
+              <span class="markBtn el-icon-s-flag" @click="markCur"></span>
+              <el-link type="primary" :underline="false" @click="nextQuestion">下一题</el-link>
+            </div>
+          </el-footer>
         </el-container>
       </el-container>
     </el-container>
@@ -160,6 +166,28 @@ export default {
     // 当某选择题有答案时就更新左侧对应的样式
     changeAnsState () {
       this.chooseQuestionList[this.currentIndex].isAnswer = true
+    },
+    // 上一题
+    prevQuestion () {
+      if (this.currentIndex > 0) {
+        this.currentIndex--
+      }
+    },
+    // 下一题
+    nextQuestion () {
+      // console.log(this.chooseQuestionList)
+      if (this.currentIndex < this.chooseQuestionList.length - 1) {
+        this.currentIndex++
+      }
+    },
+    // 标记这道题
+    markCur () {
+      this.chooseQuestionList[this.currentIndex].isMark = !this.chooseQuestionList[this.currentIndex].isMark
+      if (this.chooseQuestionList[this.currentIndex].isMark) {
+        this.$message.success('已标记')
+      } else {
+        this.$message.success('已取消标记')
+      }
     }
   },
   created () {
@@ -305,14 +333,42 @@ export default {
     }
   }
 
+  .answer-footer {
+    width: 100%;
+    height: 100%;
+    line-height: 70px;
+    background-color: #fefefd;
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+    text-align: center;
+
+    .markBtn {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      color: #F56C6C;
+      font-size: 18px;
+      border: 1px solid #cccccc;
+      border-radius: 50%;
+      margin: 0 20px;
+      cursor: pointer;
+    }
+  }
+
   .el-container {
     height: 100%;
 
     .el-header, .el-footer {
-      background-color: #B3C0D1;
+      background-color: #E9EEF3;
       color: #333;
       padding: 0;
       line-height: 80px;
+    }
+
+    .el-footer {
+      padding: 0 10px 10px 0;
     }
 
     .el-aside {

@@ -9,7 +9,7 @@
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-taiyang"></use>
           </svg>
-          早上好！admin
+          早上好！{{ name }}
         </div>
         <div class="current-box">
           <div class="current-examinee">
@@ -18,7 +18,7 @@
           </div>
           <div class="current-exam">
             <p class="title">正在考试试卷</p>
-            <i>0</i>
+            <i>{{ currentExamCount }}</i>
           </div>
         </div>
       </div>
@@ -27,8 +27,22 @@
 </template>
 
 <script>
+import jwtDecode from 'jwt-decode'
+import { mapGetters } from 'vuex'
+
 export default {
-  name: 'GreetCard'
+  name: 'GreetCard',
+  data () {
+    return {
+      name: '老师'
+    }
+  },
+  computed: {
+    ...mapGetters('adminHome', ['currentExamCount'])
+  },
+  mounted () {
+    this.name = jwtDecode(localStorage.getItem('token')).name
+  }
 }
 </script>
 

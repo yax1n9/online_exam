@@ -2,22 +2,27 @@
   <div class="statistics-box">
     <div class="exam-count">
       <p class="title">总试卷数</p>
-      <i>3</i>
+      <i>{{ examCount }}</i>
     </div>
     <div class="question-count">
       <p class="title">总试题数</p>
-      <i>6</i>
+      <i>{{ questionCount }}</i>
     </div>
     <div class="examinee-count">
       <p class="title">总考生数</p>
-      <i>0</i>
+      <i>{{ studentCount }}</i>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  name: 'StatisticsBox'
+  name: 'StatisticsBox',
+  computed: {
+    ...mapGetters('adminHome', ['examCount', 'questionCount', 'studentCount'])
+  }
 }
 </script>
 
@@ -39,7 +44,7 @@ export default {
     }
 
     i {
-     font-size: 40px;
+      font-size: 40px;
       color: #0086b3;
     }
   }

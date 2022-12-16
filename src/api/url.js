@@ -1,11 +1,14 @@
-export const login = {
-  login: '/login' // 登录
-}
+// 登录
+export const login = '/login'
 
-export const sideMenu = {
-  adminSideMenuList: '/adminSideMenuList' // 管理员界面侧边栏菜单列表
-}
+// 注册
+export const register = '/register'
 
-export const exam = {
-  examList: '/examList' // 考试信息列表
-}
+// 试卷
+export const exam = '/exams'
+
+// 试题（单选）
+export const question = '/singleChooses'
+
+// 考生
+export const student = '/students'

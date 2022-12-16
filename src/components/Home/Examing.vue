@@ -4,41 +4,76 @@
       <div class="header">
         <div class="title">进行中的考试</div>
         <div class="tip">
-          <p>正在进行的考试：<i>0</i>&nbsp;个</p>
+          <p>正在进行的考试：<i>{{ currentExamCount }}</i>&nbsp;个</p>
           <p>未完成人数：<i>0</i>&nbsp;人</p>
         </div>
       </div>
       <div class="content">
-        <el-table border height="100%" style="width: 100%;">
-          <el-table-column label="考试名称">
-            <!--计算机组成原理-->
+        <el-table border height="290px" style="width: 100%;" :data="onGoingExamList">
+          <el-table-column label="试卷名称" prop="title">
           </el-table-column>
-          <el-table-column label="考试时间">
-            <!--2022-10-19 08:58:00 至 2022-10-31 23:55:00-->
+          <el-table-column label="试卷分类" prop="subjectName">
           </el-table-column>
-          <el-table-column label="未完成人数">
-            <!--10-->
+          <el-table-column label="结束时间" prop="endTime">
+            <template slot-scope="scope">
+              {{ formatTime(scope.row.endTime) }}
+            </template>
           </el-table-column>
           <el-table-column label="操作">
-            <!--查看考试监控-->
+            <template slot-scope="scope">
+              <el-link type="primary" @click="submitExam(scope.row.examId)">立即收卷</el-link>
+            </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-            background
-            layout="prev, pager, next"
-            :current-page="1"
-            :page-size="10"
-            :total="10">
-        </el-pagination>
+        <!--<el-pagination-->
+        <!--    background-->
+        <!--    layout="prev, pager, next"-->
+        <!--    :current-page.sync="currentPage"-->
+        <!--    :page-size="pageSize"-->
+        <!--    :total="total">-->
+        <!--</el-pagination>-->
       </div>
     </el-row>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import moment from 'moment'
+import { modifyExamById } from '@/api'
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
-  name: 'Examling'
+  name: 'Examling',
+  data () {
+    return {
+      // currentPage: 1,
+      // pageSize: 5,
+      // total: 0
+    }
+  },
+  computed: {
+    ...mapGetters('adminHome', ['currentExamCount', 'onGoingExamList'])
+  },
+  methods: {
+    formatTime (time) {
+      return moment(time).format('YYYY-MM-DD HH:mm:ss')
+    },
+    async submitExam (examId) {
+      // 提交修改把对应试卷状态改为结束 is_begin=0 is_end=1
+      console.log(examId)
+      const params = {
+        examId: examId,
+        isBegin: 0,
+        isEnd: 1
+      }
+      const res = await modifyExamById(params)
+      if (res.data.success) {
+        this.$message.success('修改成功！')
+        // 重新请求数据
+      }
+    }
+  }
 }
 </script>
 

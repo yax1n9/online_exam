@@ -41,8 +41,8 @@ export default {
   name: 'LoginView.vue',
   data () {
     return {
-      username: '',
-      password: ''
+      username: 'teacher',
+      password: 'teacher'
     }
   },
   methods: {
@@ -52,15 +52,15 @@ export default {
         username: this.username,
         password: this.password
       })
+      // console.log(res)
       if (res.data.code === 200) {
-        localStorage.setItem('token', res.data.data)
-        localStorage.setItem('role', '0')
-        this.$message.success(res.data.msg)
         // 返回的数据中的 token 解析并存在 localstorage 中，用于自动登录进入首页
+        localStorage.setItem('token', res.data.data.token.substring(7))
+        this.$message.success(res.data.message)
         // 解析后的数据中应该包含 role 字段，根据该字段跳转对应的路由
         await this.$router.push({ name: 'home' }) // 跳转到首页
       } else {
-        this.$message.error(res.data.msg)
+        this.$message.error(res.data.message)
       }
     },
     // 找回密码

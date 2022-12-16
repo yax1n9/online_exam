@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const service = axios.create({
-  baseURL: '/mock/onlineExam',
+  baseURL: 'http://localhost:8080',
   timeout: 3000
 })
 
