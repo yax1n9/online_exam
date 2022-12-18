@@ -3,8 +3,13 @@
     <div class="top">
       <div class="top-left">
         <el-checkbox v-model="fullCheck" label="全选" @change="allCheck"></el-checkbox>
-        <el-select v-model="subject" placeholder="试题分类">
-          <el-option value="1" label="计算机网络"></el-option>
+        <el-select v-model="subjectId" placeholder="试题分类" @change="initList">
+          <el-option
+              v-for="item in subjectList"
+              :key="item.subjectId"
+              :label="item.name"
+              :value="item.subjectId">
+          </el-option>
         </el-select>
         <el-select v-model="type" placeholder="选择题型">
           <el-option value="1" label="选择题"></el-option>
@@ -28,7 +33,7 @@
             background
             layout="prev, pager, next"
             @current-change="initList"
-            :page-size="10"
+            :page-size="pageSize"
             :current-page.sync="curPage"
             :total="total">
         </el-pagination>
@@ -44,6 +49,7 @@
 <script>
 import Question from '@/components/QuestionInfo/Question'
 import { mapMutations, mapState } from 'vuex'
+import { getSingleChoosePageByCondition } from '@/api'
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -62,13 +68,14 @@ export default {
     return {
       questionList: [],
       curPage: 1,
-      total: 11,
+      pageSize: 10,
+      total: 0,
       fullCheck: false,
       copyHasCheckedQuestionList: [],
       copyQuestionList: [],
       copyFullCheck: false,
       // 科目分类
-      subject: undefined,
+      subjectId: undefined,
       // 题型
       type: undefined
     }
@@ -114,14 +121,24 @@ export default {
     /**
      * 初始化列表数据
      */
-    initList () {
+    async initList (subjectId) {
       // 1. 设置请求参数
       // 2. 发送请求
       // 3. 为列表赋值
-      if (this.curPage === 1) {
-        this.questionList = [{ questionId: 1 }, { questionId: 2 }, { questionId: 3 }, { questionId: 4 }, { questionId: 5 }, { questionId: 6 }, { questionId: 7 }]
+      const params = {}
+      if (subjectId) {
+        params.subjectId = subjectId
+        const res = await getSingleChoosePageByCondition(this.curPage, this.pageSize, params)
+        if (res.data.success) {
+          this.questionList = res.data.data.records
+          this.total = res.data.data.total
+        }
       } else {
-        this.questionList = [{ questionId: 10 }, { questionId: 11 }]
+        const res = await getSingleChoosePageByCondition(this.curPage, this.pageSize, params)
+        if (res.data.success) {
+          this.questionList = res.data.data.records
+          this.total = res.data.data.total
+        }
       }
       // 4. 为列表添加 isChecked
       this.handleIsChecked()

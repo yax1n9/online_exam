@@ -50,12 +50,11 @@ export default {
     return {
       questionList: [], // 选中的试题
       dialogVisible: false,
-      tabName: 'choose',
-      subjectList: [] // 科目分类列表
+      tabName: 'choose'
     }
   },
   computed: {
-    ...mapState('createExam', ['hasCheckedQuestionList'])
+    ...mapState('createExam', ['hasCheckedQuestionList', 'subjectList'])
   },
   watch: {
     hasCheckedQuestionList () {
@@ -63,10 +62,6 @@ export default {
     }
   },
   methods: {
-    getSubjectList () {
-      // 设置请求参数请求分类列表
-      // 请求列表数据时可以设置分类参数，按类别查询
-    },
     initQuestionList () {
       this.questionList = JSON.parse(JSON.stringify(this.hasCheckedQuestionList))
     },
@@ -76,7 +71,6 @@ export default {
   },
   created () {
     this.initQuestionList()
-    this.getSubjectList()
     this.$bus.$on('switchDialogVisible', this.switchDiaVisible)
   }
 }

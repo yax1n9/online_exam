@@ -3,7 +3,7 @@
     <el-row>
       <div class="title">快捷操作</div>
       <el-col :xs="12" :sm="12" :md="6" :lg="6" :xl="6">
-        <div class="quick-op">
+        <div class="quick-op" @click="$router.push({name: 'exam_create'})">
           <span>
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-tianjia"></use>
@@ -13,7 +13,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :md="6" :lg="6" :xl="6">
-        <div class="quick-op">
+        <div class="quick-op" @click="$router.push({name: 'student_create'})">
           <span>
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-addpersonnel-01"></use>
@@ -23,7 +23,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :md="6" :lg="6" :xl="6">
-        <div class="quick-op">
+        <div class="quick-op" @click="$router.push({name: 'question_create'})">
           <span>
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-changjianwenti"></use>
@@ -33,7 +33,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :md="6" :lg="6" :xl="6">
-        <div class="quick-op">
+        <div class="quick-op" @click="$router.push({name: 'grade_select'})">
           <span>
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-chengjichaxun"></use>

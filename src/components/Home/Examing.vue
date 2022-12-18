@@ -21,7 +21,7 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-link type="primary" @click="submitExam(scope.row.examId)">立即收卷</el-link>
+              <el-link type="primary" @click="submitExam(scope.row)">立即收卷</el-link>
             </template>
           </el-table-column>
         </el-table>
@@ -59,19 +59,30 @@ export default {
     formatTime (time) {
       return moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
-    async submitExam (examId) {
+    async submitExam (exam) {
       // 提交修改把对应试卷状态改为结束 is_begin=0 is_end=1
-      console.log(examId)
-      const params = {
-        examId: examId,
-        isBegin: 0,
-        isEnd: 1
-      }
-      const res = await modifyExamById(params)
-      if (res.data.success) {
-        this.$message.success('修改成功！')
+      console.log(exam.examId)
+
+      this.$confirm(exam.title, '立即收卷', {
+        cancelButtonText: '取消',
+        confirmButtonText: '确定',
+        type: 'warning'
+      }).then(async () => {
+        const params = {
+          examId: exam.examId,
+          isBegin: 0,
+          isEnd: 1
+        }
+        const res = await modifyExamById(params)
+        if (res.data.success) {
+          this.$message.success('修改成功！')
+        }
+      }).catch(() => {
+        this.$message.info('取消收卷')
+      }).finally(() => {
         // 重新请求数据
-      }
+        this.$store.dispatch('adminHome/initHomeData')
+      })
     }
   }
 }

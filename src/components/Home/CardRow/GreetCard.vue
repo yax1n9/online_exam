@@ -34,7 +34,7 @@ export default {
   name: 'GreetCard',
   data () {
     return {
-      name: '老师'
+      name: ''
     }
   },
   computed: {

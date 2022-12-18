@@ -12,3 +12,9 @@ export const question = '/singleChooses'
 
 // 考生
 export const student = '/students'
+
+// 分类（科目）
+export const subject = '/subjects'
+
+// 文件
+export const file = '/files'

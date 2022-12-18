@@ -58,6 +58,18 @@ export const getExamPageByCondition = (currentPage, pageSize, params) => {
   })
 }
 
+// 添加试卷设置
+export const createExam = (params) => {
+  return service({
+    url: url.exam,
+    data: params,
+    method: 'post',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+}
+
 // 修改试卷
 export const modifyExamById = (params) => {
   return service({
@@ -138,6 +150,104 @@ export const getStudentPageByCondition = (currentPage, pageSize, params) => {
   return service({
     url: `${url.student}/${currentPage}/${pageSize}`,
     params: params,
+    method: 'get',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+}
+
+/*
+  分类（科目）
+ */
+
+// 新增分类
+export const createSubject = (params) => {
+  return service({
+    url: url.subject,
+    data: params,
+    method: 'post',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+}
+
+// 删除分类
+export const removeSubjectById = (subjectId) => {
+  return service({
+    url: `${url.subject}/${subjectId}`,
+    method: 'delete',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+}
+
+// 修改分类
+export const modifySubjectById = (params) => {
+  return service({
+    url: url.subject,
+    data: params,
+    method: 'put',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+}
+
+// 查询单个分类
+export const selectSubjectById = (subjectId) => {
+  return service({
+    url: `${url.subject}/${subjectId}`,
+    method: 'get',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+}
+
+// 查询分类列表
+export const selectSubjectList = () => {
+  return service({
+    url: url.subject,
+    method: 'get',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+}
+
+// 分页条件查询分类
+export const selectSubjectPageByCondition = (currentPage, pageSize, params) => {
+  return service({
+    url: `${url.subject}/${currentPage}/${pageSize}`,
+    params: params,
+    method: 'get',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+}
+
+/*
+  文件
+ */
+// 上传
+export const upload = () => {
+  return service({
+    url: url.file,
+    method: 'post',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+}
+
+// 下载
+export const download = (fileName) => {
+  return service({
+    url: `${url.file}/${fileName}`,
     method: 'get',
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token')
