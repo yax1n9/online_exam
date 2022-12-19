@@ -24,14 +24,19 @@
           </div>
           <div class="subject">
             <h2>试题分类</h2>
-            <el-select v-model="question.subject">
-              <el-option value="0" label="计算机网络"></el-option>
+            <el-select v-model="question.subjectId" placeholder="选择分类">
+              <el-option
+                  v-for="item in subjectList"
+                  :key="item.subjectId"
+                  :label="item.name"
+                  :value="item.subjectId">
+              </el-option>
             </el-select>
           </div>
-          <div class="score">
-            <h2>分数</h2>
-            <el-input type="number" v-model="question.score"></el-input>
-          </div>
+          <!--<div class="score">-->
+          <!--  <h2>分数</h2>-->
+          <!--  <el-input type="number" v-model="question.score"></el-input>-->
+          <!--</div>-->
           <el-button type="primary" @click="submitAdd">确认添加</el-button>
         </div>
       </el-tab-pane>
@@ -42,19 +47,14 @@
 
 <script>
 import TinyMCE from '@/components/TinyMCE/TinyMCE'
+import { mapState } from 'vuex'
+import { createSingleChoose } from '@/api'
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Insert',
   components: {
     TinyMCE
-  },
-  props: {
-    // ChooseQuestion 中请求的分类列表
-    subjectList: {
-      require: true,
-      type: Array
-    }
   },
   data () {
     return {
@@ -65,33 +65,40 @@ export default {
         options: [
           {
             id: 0,
-            content: ''
+            content: null
           },
           {
             id: 1,
-            content: ''
+            content: null
           }
         ],
         answer: undefined,
         // 试题分类 科目
-        subject: undefined,
+        subjectId: undefined,
         // 题目类型 单选，填空等
-        type: 0,
-        score: 10
+        type: 0
+        // score: 10
       }
     }
+  },
+  computed: {
+    ...mapState('createExam', ['subjectList'])
   },
   methods: {
     getCapital (val) {
       return String.fromCharCode(val + 65)
     },
     addOption () {
-      this.question.options.push({
-        id: this.question.options.length,
-        content: ''
-      })
+      if (!(this.question.options.length >= 4)) {
+        this.question.options.push({
+          id: this.question.options.length,
+          content: null
+        })
+      } else {
+        return null
+      }
     },
-    submitAdd () {
+    async submitAdd () {
       // 题干
       if (this.$refs.title.content.trim() === '') {
         return this.$message.warning('您还没有设置题干，请设置')
@@ -111,14 +118,32 @@ export default {
         return this.$message.warning('您还没有设置正确答案！')
       }
       // 分类
-      if (this.question.subject === undefined) {
+      if (this.question.subjectId === undefined) {
         return this.$message.warning('您还没有设置试题分类！')
       }
       // 分数
       // 题干、选项、答案、分类、分数都添加后 发送请求提交数据
       // 添加到题库， 添加到选中
-      console.log(this.question)
-      this.$message.success('成功啦')
+      const params = {
+        subjectId: this.question.subjectId,
+        title: this.question.title,
+        answerA: this.question.options[0].content,
+        answerB: this.question.options[1].content,
+        answerC: this.question.options[2] ? this.question.options[2].content : null,
+        answerD: this.question.options[3] ? this.question.options[3].content : null,
+        realAnswer: this.question.answer
+      }
+      // console.log(params)
+      const res = await createSingleChoose(params)
+      if (res.data.success) {
+        // 添加成功，刷新列表，添加到已选列表
+        this.$message.success(res.data.message)
+        const question = res.data.data.question
+        question.isChecked = true
+        this.$store.commit('createExam/INSERT_A_QUESTION', question)
+      } else {
+        this.$message.error(res.data.message)
+      }
     }
   }
 }

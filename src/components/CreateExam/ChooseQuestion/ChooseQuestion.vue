@@ -1,7 +1,7 @@
 <template>
   <div class="choose-question">
     <header>
-      <p class="title">为试卷《demo》选择试题</p>
+      <p class="title">为试卷《 {{ examTitle }} 》选择试题</p>
       <el-button type="primary" @click="dialogVisible=!dialogVisible" v-show="hasCheckedQuestionList[0]">
         继续添加
       </el-button>
@@ -12,21 +12,24 @@
       </el-empty>
       <div class="question-list" v-if="hasCheckedQuestionList[0]">
         <question
-            v-for="item in hasCheckedQuestionList"
+            v-for="(item,index) in hasCheckedQuestionList"
             :key="item.questionId"
             :question="item"
             :operate-visible="true"
-            :scene="0">
+            :scene="0"
+            :index="index+1"
+            :count="hasCheckedQuestionList.length"
+        >
         </question>
       </div>
     </div>
     <el-dialog :visible.sync="dialogVisible" width="80%">
       <el-tabs v-model="tabName">
         <el-tab-pane label="选择试题" name="choose">
-          <choose :subject-list="subjectList"/>
+          <choose ref="choose"/>
         </el-tab-pane>
         <el-tab-pane label="新增试题" name="insert">
-          <insert :subject-list="subjectList"/>
+          <insert/>
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
@@ -45,6 +48,12 @@ export default {
     Choose,
     Insert,
     Question
+  },
+  props: {
+    examTitle: {
+      required: true,
+      type: String
+    }
   },
   data () {
     return {

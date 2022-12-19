@@ -43,7 +43,7 @@ export default {
         //   success(img)
         // }
       },
-      content: ''
+      content: null
     }
   },
   created () {

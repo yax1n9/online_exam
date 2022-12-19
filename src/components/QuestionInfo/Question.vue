@@ -6,20 +6,19 @@
       </div>
       <div class="content">
         <div class="top">
-          <el-tag type="primary" effect="plain" size="mini">1/10</el-tag>
-          <el-tag type="primary" effect="plain" size="mini">单选</el-tag>
-          <el-tag type="primary" effect="plain" size="mini">10分</el-tag>
-          这是一道单项选择题（）
+          <el-tag type="primary" effect="plain" size="mini">{{ index }}/{{ count }}</el-tag>
+          <el-tag type="primary" effect="plain" size="mini">{{ question.type === 0 ? '单选' : '填空' }}</el-tag>
+          <span v-html="question.title" style="margin-left: 5px; display: inline-block"></span>
         </div>
         <div class="bottom">
-          分类：<span>计算机网络</span>
-          <span></span>作者：<span>系统管理员</span>
-          <span></span>更新于：<span>2022-10-21 17:18</span>
+          分类：<span>{{ question.subjectName }}</span>
+          <!--<span></span>作者：<span>系统管理员</span>-->
+          <!--<span></span>更新于：<span>2022-10-21 17:18</span>-->
         </div>
       </div>
     </div>
     <div class="operate right" v-if="operateVisible">
-      <el-link icon="el-icon-edit" @click="editQuestion">编辑</el-link>
+      <!--<el-link icon="el-icon-edit" @click="editQuestion">编辑</el-link>-->
       <el-link icon="el-icon-delete" @click="deleteQuestion">删除</el-link>
     </div>
   </div>
@@ -29,14 +28,9 @@
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Question',
-  data () {
-    return {
-      questionInfo: {}
-    }
-  },
   props: {
     question: {
-      require: true,
+      required: true,
       type: Object
     },
     // 操作按钮是否可视
@@ -46,14 +40,30 @@ export default {
     },
     // 使用场景 0：选择试题ChooseQuestion  1：查询试题：SelectQuestion
     scene: {
-      require: true,
+      required: true,
       type: Number
     },
     // 按需传递的删除函数
     delQuestion: {
       type: Function
+    },
+    // index 序号
+    index: {
+      required: true,
+      type: Number
+    },
+    // count 题目数量
+    count: {
+      required: true,
+      type: Number
     }
   },
+  data () {
+    return {
+      questionInfo: {}
+    }
+  },
+  computed: {},
   watch: {
     question: {
       handler (newVal) {

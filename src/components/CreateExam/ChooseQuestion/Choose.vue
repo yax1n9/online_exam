@@ -22,10 +22,14 @@
     </div>
     <div class="content">
       <question
-          v-for="item in questionList"
+          v-for="(item,index) in questionList"
           :key="item.questionId"
+          :scene="0"
           :question="item"
-          :operate-visible="false"/>
+          :operate-visible="false"
+          :index="index+1"
+          :count="questionList.length"
+      />
     </div>
     <div class="bottom">
       <div class="bottom-left">
@@ -57,13 +61,6 @@ export default {
   components: {
     Question
   },
-  props: {
-    // ChooseQuestion 中请求的分类列表
-    subjectList: {
-      require: true,
-      type: Array
-    }
-  },
   data () {
     return {
       questionList: [],
@@ -81,7 +78,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('createExam', ['hasCheckedQuestionList']),
+    ...mapState('createExam', ['hasCheckedQuestionList', 'subjectList']),
     // 已经被选中的问题的 id 集合
     hasCheckedQuestionIds () {
       const ids = []
@@ -121,13 +118,13 @@ export default {
     /**
      * 初始化列表数据
      */
-    async initList (subjectId) {
+    async initList () {
       // 1. 设置请求参数
       // 2. 发送请求
       // 3. 为列表赋值
       const params = {}
-      if (subjectId) {
-        params.subjectId = subjectId
+      if (this.subjectId) {
+        params.subjectId = this.subjectId
         const res = await getSingleChoosePageByCondition(this.curPage, this.pageSize, params)
         if (res.data.success) {
           this.questionList = res.data.data.records

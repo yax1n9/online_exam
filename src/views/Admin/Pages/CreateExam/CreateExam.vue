@@ -10,7 +10,7 @@
     </header>
     <div class="content">
       <base-info v-show="curStep===0" ref="baseInfo"/>
-      <choose-question v-show="curStep===1"/>
+      <choose-question v-show="curStep===1" :exam-title="examTitle"/>
       <exam-setting v-show="curStep===2" ref="settings"/>
       <create-done v-show="curStep===3"/>
     </div>
@@ -33,7 +33,8 @@ export default {
   name: 'CreateExam',
   data () {
     return {
-      curStep: 0
+      curStep: 0,
+      examTitle: ''
     }
   },
   components: {
@@ -46,13 +47,18 @@ export default {
     ...mapState('createExam', ['hasCheckedQuestionList', 'baseInfo', 'settings'])
   },
   methods: {
+    /**
+     * 上一步
+     */
     prev () {
       if (this.curStep > 0) {
         this.curStep--
       }
     },
+    /**
+     * 下一步
+     */
     next () {
-      console.log(this.curStep)
       switch (this.curStep) {
         case 0:
           // 基本信息
@@ -68,6 +74,7 @@ export default {
               this.$message.error('数据不合法，请重新输入')
             }
           })
+          this.examTitle = this.$refs.baseInfo.baseInfo.examName
           break
         case 1:
           // 选择试题
@@ -76,15 +83,18 @@ export default {
           }
           break
         case 2:
-          // 设置
+          // 设置 提交
           this.$refs.settings.$refs.form.validate((valid) => {
             if (valid) {
               // 数据合法，保存到vuex中，最后一起提交
               this.$store.commit('createExam/SET_SETTINGS', this.$refs.settings.settings)
               // 提交所有信息
-              this.submitExam()
-              if (this.curStep < 4) {
-                this.curStep++
+              if (this.submitExam()) {
+                if (this.curStep < 4) {
+                  this.curStep++
+                }
+              } else {
+                this.$message.error('试卷创建失败，请稍后再试！')
               }
             } else {
               // 数据没有通过验证
@@ -94,26 +104,31 @@ export default {
           break
       }
     },
+    /**
+     * 提交试卷
+     * @returns {Promise<void>}
+     */
     async submitExam () {
-      // 先提交设置信息
-      // 再提交试题信息
+      const questionIds = []
+      this.hasCheckedQuestionList.forEach((item) => {
+        questionIds.push(item.questionId)
+      })
       const params = {
-        title: this.baseInfo.examName,
-        // subjectId: this.baseInfo.examSubject,
-        subjectId: 1,
-        cover: this.baseInfo.imageUrl,
-        startTime: this.settings.dateTime[0],
-        endTime: this.settings.dateTime[1],
-        shortestSubmitTime: this.settings.shortestTime,
-        latestEnterTime: this.settings.latestTime,
-        passLine: this.settings.passLine
+        exam: {
+          title: this.baseInfo.examName,
+          subjectId: this.baseInfo.examSubject,
+          cover: this.baseInfo.imageUrl,
+          startTime: this.settings.dateTime[0],
+          endTime: this.settings.dateTime[1],
+          shortestSubmitTime: this.settings.shortestTime,
+          latestEnterTime: this.settings.latestTime,
+          passLine: this.settings.passLine
+        },
+        questionIds: questionIds
       }
-      // 日期格式会出问题
-      // subjectId 有问题
-      const res1 = await createExam(params)
-      if (res1.data.success) {
-        console.log('添加成功')
-      }
+      const res = await createExam(params)
+      this.$store.commit('createExam/SET_QUESTION_LIST', [])
+      return res.data.success
     }
   },
   mounted () {

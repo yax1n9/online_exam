@@ -1,6 +1,3 @@
-import router from '@/router/index'
-import jwtDecode from 'jwt-decode'
-
 export default [
   {
     path: '/login',
@@ -9,24 +6,7 @@ export default [
   },
   {
     path: '/',
-    name: 'home',
-    beforeEnter (to, from, next) {
-      if (localStorage.getItem('token')) {
-        const tokenInfo = jwtDecode(localStorage.getItem('token'))
-        console.log(tokenInfo)
-        if (tokenInfo.role === '1') {
-          router.push('/admin')
-          next()
-        } else if (tokenInfo.role === '0') {
-          router.push('/user')
-          next()
-        } else {
-          next(false)
-        }
-      } else {
-        next('/login')
-      }
-    }
+    name: 'home'
   },
   {
     path: '/admin',

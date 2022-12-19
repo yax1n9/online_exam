@@ -4,6 +4,9 @@ export const login = '/login'
 // 注册
 export const register = '/register'
 
+// token 验证
+export const verify = '/token/verify'
+
 // 试卷
 export const exam = '/exams'
 

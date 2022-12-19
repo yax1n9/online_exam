@@ -11,6 +11,17 @@ export const login = (params) => {
   })
 }
 
+// token 验证
+export const tokenVerify = () => {
+  return service({
+    url: url.verify,
+    method: 'get',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+}
+
 // 注册
 export const register = (params) => {
   return service({
@@ -114,6 +125,18 @@ export const getSingleChoosePageByCondition = (currentPage, pageSize, params) =>
     url: `${url.question}/${currentPage}/${pageSize}`,
     params: params,
     method: 'get',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  })
+}
+
+// 添加一条单选题
+export const createSingleChoose = (params) => {
+  return service({
+    url: `${url.question}`,
+    data: params,
+    method: 'post',
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token')
     }
