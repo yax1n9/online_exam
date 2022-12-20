@@ -23,21 +23,21 @@
                   <li>{{ examInfo.subjectName }}</li>
                   <li>总分100分</li>
                   <li>共10道题</li>
-                  <li>限制{{ keepTime(examInfo.startTime, examInfo.endTime) }} 分钟</li>
+                  <li>限制{{ keepTime(examInfo.startTime, examInfo.endTime) }}分钟</li>
                 </ul>
               </div>
               <!--<div class="finish-num">-->
               <!--  <i>0</i>-->
               <!--  <p>已考次数</p>-->
               <!--</div>-->
-              <el-button type="primary" @click="settingDialogVisible = true">设置</el-button>
+              <el-button type="primary" @click="settingDialogVisible = true" v-if="examInfo.isEnd !== 1">设置</el-button>
             </div>
             <div class="operates">
               <div class="create-info">
                 <span class="create-by">考试时间：</span>
-                <span class="create-time">{{ formatTime(examInfo.startTime) }} - {{
-                    formatTime(examInfo.endTime)
-                  }}</span>
+                <span class="create-time">
+                  {{ formatTime(examInfo.startTime) }} - {{ formatTime(examInfo.endTime) }}
+                </span>
               </div>
               <!--<ul class="btns">-->
               <!--<li>置顶试卷</li>-->
@@ -56,7 +56,7 @@
 
     <!-- 设置对话框 -->
     <el-dialog :visible.sync="settingDialogVisible" :title="`设置《${examInfo.title}》`">
-      <el-form ref="form" :model="examInfo" label-width="80px">
+      <el-form ref="form" :model="examInfo" label-width="130px">
         <el-form-item label="标题">
           <el-input v-model="examInfo.title"></el-input>
         </el-form-item>
@@ -82,14 +82,38 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
+        <el-form-item label="考试时间">
+          <el-date-picker
+              v-model="examInfo.dateTime"
+              type="datetimerange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              format="yyyy-MM-dd HH:mm"
+              value-format="timestamp">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="最晚进入时间(min)">
+          <el-input v-model="examInfo.latestEnterTime"></el-input>
+        </el-form-item>
+        <el-form-item label="最短提交时间(min)">
+          <el-input v-model="examInfo.shortestSubmitTime"></el-input>
+        </el-form-item>
+        <el-form-item label="及格线">
+          <el-input v-model="examInfo.passLine"></el-input>
+        </el-form-item>
       </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="settingDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitEdit">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
-import { selectSubjectList } from '@/api'
+import { modifyExamById, selectSubjectList } from '@/api'
 
 export default {
   name: 'ExamInfo',
@@ -114,6 +138,30 @@ export default {
       } else {
         await this.initSubjectList()
       }
+    },
+    /**
+     * 提交修改
+     */
+    async submitEdit () {
+      const params = {
+        examId: this.examInfo.examId,
+        title: this.examInfo.title,
+        cover: this.examInfo.cover,
+        subjectId: this.examInfo.subjectId,
+        startTime: this.examInfo.dateTime[0],
+        endTime: this.examInfo.dateTime[1],
+        latestEnterTime: this.examInfo.latestEnterTime,
+        shortestSubmitTime: this.examInfo.shortestSubmitTime,
+        passLine: this.passLine
+      }
+      const res = await modifyExamById(params)
+      if (res.data.success) {
+        this.$message.success(res.data.message)
+        this.settingDialogVisible = false
+      } else {
+        this.$message.error(res.data.message)
+      }
+      await this.$parent.initExamList()
     },
     /**
      * 图片上传成功后的回调
@@ -163,6 +211,7 @@ export default {
   },
   created () {
     this.examInfo = JSON.parse(JSON.stringify(this.exam))
+    this.$set(this.examInfo, 'dateTime', [moment(this.exam.startTime).valueOf(), moment(this.exam.endTime).valueOf()])
     this.initSubjectList()
   }
 }
@@ -305,6 +354,35 @@ export default {
           }
         }
       }
+    }
+  }
+
+  .cover-uploader, .el-upload {
+    width: 240px;
+    height: 180px;
+    border: 1px dashed #cccccc;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      border-color: #409EFF;
+    }
+
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 240px;
+      height: 180px;
+      line-height: 180px;
+      text-align: center;
+    }
+
+    .cover {
+      width: 240px;
+      height: 180px;
+      display: block;
     }
   }
 }

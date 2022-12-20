@@ -12,7 +12,7 @@
         <!--  <el-option value="2" label="考试中"></el-option>-->
         <!--  <el-option value="4" label="已结束"></el-option>-->
         <!--</el-select>-->
-        <el-input v-model="keyword" placeholder="请输入关键字" prefix-icon="el-icon-search"></el-input>
+        <el-input v-model="keyword" placeholder="请输入关键字" prefix-icon="el-icon-search" @change="initExamList" clearable @clear="initExamList"></el-input>
       </div>
     </header>
     <el-empty description="暂无数据" v-if="!tableList[0]"></el-empty>
