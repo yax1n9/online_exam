@@ -117,7 +117,7 @@ export default {
         exam: {
           title: this.baseInfo.examName,
           subjectId: this.baseInfo.examSubject,
-          cover: this.baseInfo.imageUrl,
+          cover: this.baseInfo.imageName,
           startTime: this.settings.dateTime[0],
           endTime: this.settings.dateTime[1],
           shortestSubmitTime: this.settings.shortestTime,

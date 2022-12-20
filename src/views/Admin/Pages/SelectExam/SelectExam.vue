@@ -6,12 +6,12 @@
         <el-button type="primary" @click="$router.push({name:'exam_create'})">新建试卷</el-button>
       </div>
       <div class="header-right">
-        <el-select value="" placeholder="考试状态" clearable>
-          <el-option value="1" label="草稿"></el-option>
-          <el-option value="3" label="未开始"></el-option>
-          <el-option value="2" label="考试中"></el-option>
-          <el-option value="4" label="已结束"></el-option>
-        </el-select>
+        <!--<el-select value="" placeholder="考试状态" clearable>-->
+        <!--  <el-option value="1" label="草稿"></el-option>-->
+        <!--  <el-option value="3" label="未开始"></el-option>-->
+        <!--  <el-option value="2" label="考试中"></el-option>-->
+        <!--  <el-option value="4" label="已结束"></el-option>-->
+        <!--</el-select>-->
         <el-input v-model="keyword" placeholder="请输入关键字" prefix-icon="el-icon-search"></el-input>
       </div>
     </header>
@@ -26,8 +26,9 @@
       <el-pagination
           background
           layout="prev, pager, next"
+          @current-change="initExamList"
+          :current-page.sync="currentPage"
           :page-size="pageSize"
-          :page-count="pageCount"
           :total="total">
       </el-pagination>
     </footer>
@@ -36,6 +37,7 @@
 
 <script>
 import ExamInfo from '@/components/ExamInfo/ExamInfo'
+import { getExamPageByCondition } from '@/api'
 
 export default {
   name: 'SelectExam',
@@ -44,17 +46,34 @@ export default {
   },
   data () {
     return {
-      tableList: [{ examId: 1 }, { examId: 2 }, { examId: 3 }, { examId: 4 }, { examId: 5 }, { examId: 6 }],
-      keyword: '',
+      tableList: [],
+      keyword: null,
       isFullCheck: false,
+      currentPage: 1,
       pageSize: 5,
-      pageCount: 1,
-      total: 6
+      total: 0
     }
   },
   computed: {},
   methods: {
-    // 处理列表数据，为每一条数据设置响应式多选框状态
+    /**
+     * 初始化请求试卷列表
+     */
+    async initExamList () {
+      const params = {}
+      if (this.keyword) {
+        params.title = this.keyword
+      }
+      const res = await getExamPageByCondition(this.currentPage, this.pageSize, params)
+      if (res.data.success) {
+        this.tableList = res.data.data.records
+        this.total = res.data.data.total
+        this.handleTableList(false)
+      }
+    },
+    /**
+     * 处理列表数据，为每一条数据设置响应式多选框状态
+     */
     handleTableList (val) {
       this.tableList.forEach(item => {
         if (item.isCheck === undefined) {
@@ -64,7 +83,9 @@ export default {
         }
       })
     },
-    // 全选时触发
+    /**
+     *  全选时触发
+     */
     allChange () {
       if (this.isFullCheck) {
         this.handleTableList(true)
@@ -72,7 +93,10 @@ export default {
         this.handleTableList(false)
       }
     },
-    // 自定义事件
+    /**
+     *  自定义事件
+     * @param examInfo
+     */
     switchIsCheck (examInfo) {
       // 先更新全选状态
       if (examInfo.isCheck) {
@@ -92,7 +116,7 @@ export default {
     }
   },
   created () {
-    this.handleTableList(false)
+    this.initExamList()
     // ExamInfo中触发的事件，切换当前页面全选按钮的状态
     this.$bus.$on('switchIsCheck', this.switchIsCheck)
   }
